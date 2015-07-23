@@ -1,0 +1,17 @@
+{
+  "name": "design-patterns",
+  "author": "Boy <boyw165@gmail.com>",
+  "version": "0.0.0",
+  "engines": {
+    "node": "0.12.4"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha -t 5000"
+  },
+  "devDependencies": {
+    "mocha": "^2.2.5"
+  },
+  "dependencies": {
+  }
+}
