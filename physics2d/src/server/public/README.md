@@ -1,0 +1,1 @@
+Static files on the server side.
