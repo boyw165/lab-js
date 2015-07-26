@@ -4,6 +4,7 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var mongodb = require('mongodb');
+var mongoose = require('mongoose');
 var monk = require('monk');
 
 var global = require('./global');

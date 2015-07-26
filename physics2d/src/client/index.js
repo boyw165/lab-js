@@ -1,126 +1,79 @@
-/**
- * This file provided by Facebook is for non-commercial testing and evaluation purposes only.
- * Facebook reserves all rights not expressly granted.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+/** @jsx React.DOM */
 
-var Comment = React.createClass({
-  render: function() {
-    var rawMarkup = marked(this.props.children.toString(), {sanitize: true});
-    return (
-      <div className="comment">
-        <h2 className="commentAuthor">
-          {this.props.author}
-        </h2>
-        <span dangerouslySetInnerHTML={{__html: rawMarkup}} />
-      </div>
-    );
-  }
-});
+// Let's create a "real-time search" component
 
-var CommentBox = React.createClass({
-  loadCommentsFromServer: function() {
-    $.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      cache: false,
-      success: function(data) {
-        this.setState({data: data});
-      }.bind(this),
-      error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
-    });
+var SearchExample = React.createClass({
+
+  getInitialState: function(){
+    return { searchString: '' };
   },
-  handleCommentSubmit: function(comment) {
-    var comments = this.state.data;
-    comments.push(comment);
-    this.setState({data: comments}, function() {
-      // `setState` accepts a callback. To avoid (improbable) race condition,
-      // `we'll send the ajax request right after we optimistically set the new
-      // `state.
-      $.ajax({
-        url: this.props.url,
-        dataType: 'json',
-        type: 'POST',
-        data: comment,
-        success: function(data) {
-          this.setState({data: data});
-        }.bind(this),
-        error: function(xhr, status, err) {
-          console.error(this.props.url, status, err.toString());
-        }.bind(this)
+
+  handleChange: function(e){
+
+    // If you comment out this line, the text box will not change its value.
+    // This is because in React, an input cannot change independently of the value
+    // that was assigned to it. In our case this is this.state.searchString.
+
+    this.setState({searchString:e.target.value});
+  },
+
+  render: function() {
+
+    var libraries = this.props.items,
+        searchString = this.state.searchString.trim().toLowerCase();
+
+
+    if(searchString.length > 0){
+
+      // We are searching. Filter the results.
+
+      libraries = libraries.filter(function(l){
+        return l.name.toLowerCase().match( searchString );
       });
-    });
-  },
-  getInitialState: function() {
-    return {data: []};
-  },
-  componentDidMount: function() {
-    this.loadCommentsFromServer();
-    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
-  },
-  render: function() {
-    return (
-      <div className="commentBox">
-        <h1>Comments</h1>
-        <CommentList data={this.state.data} />
-        <CommentForm onCommentSubmit={this.handleCommentSubmit} />
-      </div>
-    );
-  }
-});
 
-var CommentList = React.createClass({
-  render: function() {
-    var commentNodes = this.props.data.map(function(comment, index) {
-      return (
-        // `key` is a React-specific concept and is not mandatory for the
-        // purpose of this tutorial. if you're curious, see more here:
-        // http://facebook.github.io/react/docs/multiple-components.html#dynamic-children
-        <Comment author={comment.author} key={index}>
-          {comment.text}
-        </Comment>
-      );
-    });
-    return (
-      <div className="commentList">
-        {commentNodes}
-      </div>
-    );
-  }
-});
-
-var CommentForm = React.createClass({
-  handleSubmit: function(e) {
-    e.preventDefault();
-    var author = React.findDOMNode(this.refs.author).value.trim();
-    var text = React.findDOMNode(this.refs.text).value.trim();
-    if (!text || !author) {
-      return;
     }
-    this.props.onCommentSubmit({author: author, text: text});
-    React.findDOMNode(this.refs.author).value = '';
-    React.findDOMNode(this.refs.text).value = '';
-  },
-  render: function() {
+
     return (
-      <form className="commentForm" onSubmit={this.handleSubmit}>
-        <input type="text" placeholder="Your name" ref="author" />
-        <input type="text" placeholder="Say something..." ref="text" />
-        <input type="submit" value="Post" />
-      </form>
+        <div>
+        <input type="text" value={this.state.searchString} onChange={this.handleChange} placeholder="Type here" />
+
+        <ul>
+
+        { libraries.map(function(l){
+          return <li>{l.name} <a href={l.url}>{l.url}</a></li>
+        }) }
+
+      </ul>
+
+        </div>
     );
+
   }
 });
+
+
+var libraries = [
+
+  { name: 'Backbone.js', url: 'http://documentcloud.github.io/backbone/'},
+  { name: 'AngularJS', url: 'https://angularjs.org/'},
+  { name: 'jQuery', url: 'http://jquery.com/'},
+  { name: 'Prototype', url: 'http://www.prototypejs.org/'},
+  { name: 'React', url: 'http://facebook.github.io/react/'},
+  { name: 'Ember', url: 'http://emberjs.com/'},
+  { name: 'Knockout.js', url: 'http://knockoutjs.com/'},
+  { name: 'Dojo', url: 'http://dojotoolkit.org/'},
+  { name: 'Mootools', url: 'http://mootools.net/'},
+  { name: 'Underscore', url: 'http://documentcloud.github.io/underscore/'},
+  { name: 'Lodash', url: 'http://lodash.com/'},
+  { name: 'Moment', url: 'http://momentjs.com/'},
+  { name: 'Express', url: 'http://expressjs.com/'},
+  { name: 'Koa', url: 'http://koajs.com/'},
+
+];
+
+// Render the SearchExample component on the page
 
 React.render(
-  <CommentBox url="/comments.json" pollInterval={2000} />,
+  <SearchExample items={ libraries } />,
   document.getElementById('content')
 );
