@@ -28,7 +28,7 @@ server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: false}));
 // server.use(cookieParser());
 // Static files.
-server.use(express.static(global.PUBLIC_DIR));
+server.use(express.static(global.BUILD_PUBLIC_DIR));
 // Make our db accessible to our routers.
 server.use(function (req, res, next) {
   req.db = db;

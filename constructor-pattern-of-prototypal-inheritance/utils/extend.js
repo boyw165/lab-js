@@ -1,7 +1,7 @@
 /**
- * A function for the purpose of doing prototypal pattern of
+ * A function for the purpose of doing constructor pattern of
  * prototypal inheritance.
- * http://stackoverflow.com/questions/2800964/benefits-of-prototypal-inheritance-over-classical
+ * http://aaditmshah.github.io/why-prototypal-inheritance-matters/
  *
  * @param {Function} subClass
  * @param {Function} superClass

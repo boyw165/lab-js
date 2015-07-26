@@ -5,6 +5,6 @@ module.exports = {
   SERVER_DIR: path.join(__dirname, '/src/server'),
   SERVER_PUBLIC_DIR: path.join(__dirname, '/src/server/public'),
   BUILD_DIR: path.join(__dirname, '/build'),
-  PUBLIC_DIR: path.join(__dirname, '/build/public'),
-  BUNDLE_JS: path.join(__dirname, '/build/public/bundle.js')
+  BUILD_PUBLIC_DIR: path.join(__dirname, '/build/public'),
+  BUILD_BUNDLE_JS: path.join(__dirname, '/build/public/bundle.js')
 };

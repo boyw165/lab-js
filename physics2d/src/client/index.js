@@ -1,4 +1,7 @@
-/** @jsx React.DOM */
+// var something = require('./dir/something');
+import View from './dir/something';
+
+new View().log();
 
 // Let's create a "real-time search" component
 

@@ -4,13 +4,14 @@ var fsExtra = require('fs-extra');
 var path = require('path');
 var reactTools = require('react-tools');
 var browserify = require('browserify');
+var babelify = require('babelify');
 
 var global = require('./global');
 // Utils.
 var findjs = require('./src/server/findjs');
 
 fsExtra.removeSync(global.BUILD_DIR);
-fsExtra.copySync(global.SERVER_PUBLIC_DIR, global.PUBLIC_DIR);
+fsExtra.copySync(global.SERVER_PUBLIC_DIR, global.BUILD_PUBLIC_DIR);
 fsExtra.copySync(global.CLIENT_DIR, global.BUILD_DIR);
 
 var jsfiles = findjs(global.BUILD_DIR);
@@ -31,8 +32,12 @@ jsfiles.forEach(function(filePath) {
 
 // Browserify node modules.
 console.log('\n===== Browserify Build =====');
-var b = browserify(jsfiles);
-b.bundle(function(err, buf) {
-  fsExtra.outputFileSync(global.BUNDLE_JS, buf);
-  console.log('[Build] %s', global.BUNDLE_JS);
-});
+console.log('[Build] %s', global.BUILD_BUNDLE_JS);
+browserify({ debug: true })
+  .transform(babelify)
+  .require(path.join(global.BUILD_DIR, '/index.js'), { entry: true })
+  .bundle()
+  .on('error', function(err) {
+    throw new Error('Browserify Error: ' + err.message);
+  })
+  .pipe(fs.createWriteStream(global.BUILD_BUNDLE_JS));
