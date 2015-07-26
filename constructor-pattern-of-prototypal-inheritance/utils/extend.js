@@ -12,7 +12,6 @@ function extend(subClass, superClass) {
     var oldProto = subClass.prototype || {};
     // We use prototypal pattern of prototypal inheritance instead of constructor
     // pattern, say new operator.
-    // e.g. new superClass() is a constructor pattern of prototypal inheritance.
     var newProto = Object.create(superClass.prototype);
 
     superClass.prototype.constructor = superClass;
