@@ -1,0 +1,15 @@
+{
+  "name": "enumerable-but-not-owned-prop",
+  "version": "1.0.0",
+  "description": "Just an experiment.",
+  "scripts": {
+    "start": "mocha -t 5000",
+    "test": "mocha -t 5000"
+  },
+  "author": "boyw165 <boyw165@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "mocha": "^2.2.5",
+    "shelljs": "^0.5.1"
+  }
+}
