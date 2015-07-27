@@ -1,5 +1,17 @@
 //- index.jade
 extends ./layout.jade
 
+block prepend head
+  title Zombie Run!!!
+
+block append head
+  script(src='/matter-0.8.0.min.js')
+  //- script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyD_ZaVusTFuQwteycEXuLFEVNaaX2sbW7k')
+  script(src='https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyD_ZaVusTFuQwteycEXuLFEVNaaX2sbW7k')
+  script(src='/bundle.js')
+  link(rel='stylesheet', href='/base.css')
+
 block content
-  h1 This is index.html
+  h1 Zombie-Run Map Editor
+  #game-container
+  #bottom-bar

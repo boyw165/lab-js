@@ -1,4 +1,4 @@
-class View {
+export default class Something {
   constructor() {
     console.log('Hi I am View constructor.');
   }
@@ -6,6 +6,4 @@ class View {
   log() {
     console.log(123);
   }
-}
-
-export default View;
+};

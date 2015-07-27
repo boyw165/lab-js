@@ -10,7 +10,6 @@ var monk = require('monk');
 var global = require('./global');
 // Routers.
 var index = require('./src/server/routes/index');
-var test = require('./src/server/routes/test');
 
 var server = express();
 var db = monk('localhost:27017/pyhsics2d');
@@ -21,12 +20,10 @@ server.set('views', path.join(__dirname, '/src/server/views'));
 server.set('view engine', 'jade');
 
 // Logger.
-if (server.get('env') !== 'production') {
-  server.use(logger('dev'));
-}
+server.use(logger('dev'));
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: false}));
-// server.use(cookieParser());
+server.use(cookieParser());
 // Static files.
 server.use(express.static(global.BUILD_PUBLIC_DIR));
 // Make our db accessible to our routers.
@@ -36,26 +33,22 @@ server.use(function (req, res, next) {
 });
 // Routers
 server.use('/', index);
-server.use('/test', test);
+
+// 404 (Not Found) handler.
+server.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
 
 // Error handler.
-if (server.get('env') === 'production') {
-  server.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: {}
-    });
+server.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: server.get('env') === 'production' ? {} : err
   });
-} else {
-  server.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
+});
 
 server.listen(server.get('port'), function() {
   console.log('Express started on http://localhost:' + server.get('port') +
