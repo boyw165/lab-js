@@ -1,0 +1,15 @@
+//- index.jade
+extends ./layout.jade
+
+block prepend head
+  title Zombie Run!!!
+
+block append head
+  script(src='/index.js')
+  link(rel='stylesheet', href='/base.css')
+
+block content
+  h1 Matter.js Fun
+  #game-container
+  #bottom-bar
+  #example
