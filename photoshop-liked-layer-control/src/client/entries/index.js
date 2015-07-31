@@ -1,14 +1,18 @@
 $(document).ready(function() {
-  var LayerContainer = require('../components/LayerContainer');
+  var LayerContainer = require('../views/LayerContainer.react');
+  var layerFactory = require('../views/layerFactory');
 
-  var layers = [{isVisible: true, isLocked: false, name: 'layer 1'},
-                {isVisible: false, isLocked: true, name: 'layer 2'},
-                {isVisible: false, isLocked: false, name: 'layer 3'},
-                {isVisible: true, isLocked: false, name: 'layer 4'},
-                {isVisible: false, isLocked: true, name: 'layer 5'}];
+  // Initialize the store, action and dispatcher.
+  var factory = layerFactory([{isVisible: true, isLocked: false, snapshot: 1111},
+                              {isVisible: false, isLocked: true, snapshot: 2222},
+                              {isVisible: false, isLocked: false, snapshot: 3333},
+                              {isVisible: true, isLocked: false, snapshot: 4444},
+                              {isVisible: false, isLocked: true, snapshot: 5555}]);
 
-  React.render(
-      <LayerContainer layers={layers}/>,
+  window.store = factory.store;
+
+  window.reactRoot = React.render(
+    <LayerContainer store={factory.store} action={factory.action} />,
     document.getElementById('example')
   );
 });
